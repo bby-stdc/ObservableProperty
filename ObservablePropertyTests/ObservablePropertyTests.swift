@@ -14,8 +14,8 @@ import Nimble
 let asdf = Optional<String>(nilLiteral: ())
 
 class TestClass {
-    var text = ObservableProperty<String>(value: nil)
-    var optionalString = ObservableProperty(value: asdf)
+    var text = ObservableProperty<String>(value: "lulz")
+    var optionalString = ObservableProperty(value: asdf, error: nil)
 }
 
 class ObservablePropertySpec: QuickSpec {
@@ -30,8 +30,14 @@ class ObservablePropertySpec: QuickSpec {
             subject = TestClass()
             subject.text.setValue("First Value")
             subject.text.addObserver(self) {
-                observedValue = $0.value
-                observedError = $0.error
+                switch $0.next {
+                case .Error(let error, let value):
+                    observedError = error
+                    observedValue = value
+                case .Change(let value):
+                    observedError = nil
+                    observedValue = value
+                }
             }
 
         }

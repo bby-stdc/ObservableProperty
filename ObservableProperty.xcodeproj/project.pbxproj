@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		46E95897020846D5F6DABB93 /* Pods_ObservableProperty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BE617C1A6D84FD9A3F414FB /* Pods_ObservableProperty.framework */; };
 		48FF5CFA43B66A0CA2BE54F7 /* Pods_ObservablePropertyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8123177CA7DDFBCBDADDCE /* Pods_ObservablePropertyTests.framework */; };
-		854CCB911C836A0000182AD7 /* Observation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854CCB901C836A0000182AD7 /* Observation.swift */; };
+		854CCB911C836A0000182AD7 /* ObservationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854CCB901C836A0000182AD7 /* ObservationEvent.swift */; };
 		85C523821C7ABDA2009F432F /* ObservableProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 85C523811C7ABDA2009F432F /* ObservableProperty.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		85C523891C7ABDA2009F432F /* ObservableProperty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C5237E1C7ABDA2009F432F /* ObservableProperty.framework */; };
 		85C5238E1C7ABDA2009F432F /* ObservablePropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C5238D1C7ABDA2009F432F /* ObservablePropertyTests.swift */; };
@@ -31,7 +31,7 @@
 		5BE617C1A6D84FD9A3F414FB /* Pods_ObservableProperty.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ObservableProperty.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71DA27463FEFF044738F8251 /* Pods-ObservablePropertyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ObservablePropertyTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ObservablePropertyTests/Pods-ObservablePropertyTests.release.xcconfig"; sourceTree = "<group>"; };
 		8514F7811C7F5D0400AEED3F /* Podscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Podscript.swift; sourceTree = "<group>"; };
-		854CCB901C836A0000182AD7 /* Observation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observation.swift; sourceTree = "<group>"; };
+		854CCB901C836A0000182AD7 /* ObservationEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservationEvent.swift; sourceTree = "<group>"; };
 		854FF5501C8753FA00258218 /* ObservableProperty.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ObservableProperty.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		85C5237E1C7ABDA2009F432F /* ObservableProperty.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObservableProperty.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C523811C7ABDA2009F432F /* ObservableProperty.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObservableProperty.h; sourceTree = "<group>"; };
@@ -93,7 +93,7 @@
 			children = (
 				85C523811C7ABDA2009F432F /* ObservableProperty.h */,
 				85D352CB1C7ABED1009148E6 /* ObservableProperty.swift */,
-				854CCB901C836A0000182AD7 /* Observation.swift */,
+				854CCB901C836A0000182AD7 /* ObservationEvent.swift */,
 				85C523831C7ABDA2009F432F /* Info.plist */,
 			);
 			path = ObservableProperty;
@@ -319,7 +319,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				854CCB911C836A0000182AD7 /* Observation.swift in Sources */,
+				854CCB911C836A0000182AD7 /* ObservationEvent.swift in Sources */,
 				85D352CC1C7ABED1009148E6 /* ObservableProperty.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

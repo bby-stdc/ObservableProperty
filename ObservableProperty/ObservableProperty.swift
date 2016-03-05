@@ -8,33 +8,22 @@
 import Foundation
 import SwiftSynchronized
 
-public final class ObservableProperty<Value: Equatable> {
+public final class ObservableProperty<Value> {
 
-    public init(value: Value?, error: ErrorType? = nil) {
+    public typealias ObservationClosure = (next: ObservationEvent<Value>, observer: AnyObject) -> ()
+
+    public init(value: Value, error: ErrorType? = nil) {
         _value = value
         _error = error
-    }
-
-    public func setValue(newValue: Value?, error newErrorValue: ErrorType?) {
-        guard value != newValue || newErrorValue != nil || error != nil else { return }
-        value = newValue
-        error = newErrorValue
-        notifyAll( Observation(value: newValue, error: newErrorValue, isFinal: false) )
-    }
-
-    public func setValue(newValue: Value?) {
-        guard value != newValue else { return }
-        value = newValue
-        notifyAll( Observation(value: newValue, error: error, isFinal: false) )
     }
 
     public func setError(newErrorValue: ErrorType?) {
         guard newErrorValue != nil || error != nil else { return }
         error = newErrorValue
-        notifyAll( Observation(value: value, error: newErrorValue, isFinal: false) )
+        notifyAll( ObservationEvent(change: value, error: newErrorValue) )
     }
 
-    public private(set) var value: Value? {
+    public private(set) var value: Value {
         get { return lock.performAndWait(_value) }
         set { lock.performAndWait(_value = newValue) }
     }
@@ -50,53 +39,76 @@ public final class ObservableProperty<Value: Equatable> {
         }
     }
 
-    public func addObserver(observer: AnyObject, closure: (Observation<Value>) -> ()) {
-        let initialObservation = Observation(value: value, error: error, isFinal: false)
+    public func addObserver(observer: AnyObject, closure: ObservationClosure) {
+        let initialObservation = ObservationEvent(change: value, error: error)
         let boxedObserver = WeakObserverBox(boxedObserver: observer, closure: closure)
         observationQueue.performOnQueue {
             self.observers.append(boxedObserver)
             boxedObserver.notify(initialObservation)
         }
     }
-
-    public func makeFinal() {
-        notifyAll( Observation(value: value, error: error, isFinal: true) )
-        value = nil
-        error = nil
-    }
-
-    private var _value: Value?
+    
+    private var _value: Value
     private var _error: ErrorType?
     private let lock = NSRecursiveLock()
     private var observers: [WeakObserverBox<Value>] = []
     private let observationQueue: NSOperationQueue = .mainQueue()
-    private func notifyAll(observationInstance: Observation<Value>) {
+    private func notifyAll(observationInstance: ObservationEvent<Value>) {
         observationQueue.performOnQueue {
             self.observers.forEach { $0.notify(observationInstance) }
-            
-            switch observationInstance {
-            case .Final:
-                // Remove all observers
-                self.observers = []
-            case .None, .Some, .Error:
-                // Remove deallocated observers
-                self.observers = self.observers.filter { $0.boxedObserver != nil }
-            }
+            self.observers = self.observers.filter { $0.boxedObserver != nil }
         }
     }
 
 }
 
+extension ObservableProperty {
+
+    public func setValue(newValue: Value, error newErrorValue: ErrorType?) {
+        guard newErrorValue != nil || error != nil else { return }
+        value = newValue
+        error = newErrorValue
+        notifyAll( ObservationEvent(change: newValue, error: newErrorValue) )
+    }
+
+    public func setValue(newValue: Value) {
+        value = newValue
+        notifyAll( ObservationEvent(change: newValue, error: error) )
+    }
+    
+}
+
+
+extension ObservableProperty where Value: Equatable {
+
+    public func setValue(newValue: Value, error newErrorValue: ErrorType?) {
+        guard value != newValue || newErrorValue != nil || error != nil else { return }
+        value = newValue
+        error = newErrorValue
+        notifyAll( ObservationEvent(change: newValue, error: newErrorValue) )
+    }
+
+    public func setValue(newValue: Value) {
+        guard value != newValue else { return }
+        value = newValue
+        notifyAll( ObservationEvent(change: newValue, error: error) )
+    }
+
+}
+
 private class WeakObserverBox<Value> {
-    init(boxedObserver: AnyObject?, closure: (Observation<Value>) -> ()) {
+
+    typealias ObservationClosure = (next: ObservationEvent<Value>, observer: AnyObject) -> ()
+
+    init(boxedObserver: AnyObject?, closure: ObservationClosure) {
         self.boxedObserver = boxedObserver
         self.closure = closure
     }
     weak var boxedObserver: AnyObject?
-    let closure: (Observation<Value>) -> ()
-    func notify(instance: Observation<Value>) {
-        guard let _ = boxedObserver else { return }
-        closure(instance)
+    let closure: ObservationClosure
+    func notify(instance: ObservationEvent<Value>) {
+        guard let boxedObserver = boxedObserver else { return }
+        closure(next: instance, observer: boxedObserver)
     }
 }
 
