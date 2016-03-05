@@ -8,6 +8,31 @@
 
 import Foundation
 
+final public class Observation<Value> {
+
+    public let event: ObservationEvent<Value>
+
+    weak var observerBox: WeakObserverBox<Value>?
+
+    init(event: ObservationEvent<Value>, observerBox: WeakObserverBox<Value>) {
+        self.event = event
+        self.observerBox = observerBox
+    }
+
+    public var value: Value {
+        return event.value
+    }
+
+    public var error: ErrorType? {
+        return event.error
+    }
+
+    public func unobserve() {
+        observerBox?.boxedObserver = nil
+    }
+
+}
+
 public enum ObservationEvent<Value> {
     case Next(Value)
     case Error(ErrorType, Value)
