@@ -10,7 +10,7 @@ import SwiftSynchronized
 
 public final class ObservableProperty<Value> {
 
-    public typealias ObservationClosure = (next: ObservationEvent<Value>, observer: AnyObject) -> ()
+    public typealias ObservationClosure = (ObservationEvent<Value>) -> ()
 
     public init(value: Value, error: ErrorType? = nil) {
         _value = value
@@ -98,7 +98,7 @@ extension ObservableProperty where Value: Equatable {
 
 private class WeakObserverBox<Value> {
 
-    typealias ObservationClosure = (next: ObservationEvent<Value>, observer: AnyObject) -> ()
+    typealias ObservationClosure = (ObservationEvent<Value>) -> ()
 
     init(boxedObserver: AnyObject?, closure: ObservationClosure) {
         self.boxedObserver = boxedObserver
@@ -107,8 +107,8 @@ private class WeakObserverBox<Value> {
     weak var boxedObserver: AnyObject?
     let closure: ObservationClosure
     func notify(instance: ObservationEvent<Value>) {
-        guard let boxedObserver = boxedObserver else { return }
-        closure(next: instance, observer: boxedObserver)
+        guard let _ = boxedObserver else { return }
+        closure(instance)
     }
 }
 

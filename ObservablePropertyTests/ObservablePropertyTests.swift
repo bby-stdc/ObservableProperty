@@ -30,11 +30,11 @@ class ObservablePropertySpec: QuickSpec {
             subject = TestClass()
             subject.text.setValue("First Value")
             subject.text.addObserver(self) {
-                switch $0.next {
+                switch $0 {
                 case .Error(let error, let value):
                     observedError = error
                     observedValue = value
-                case .Change(let value):
+                case .Next(let value):
                     observedError = nil
                     observedValue = value
                 }

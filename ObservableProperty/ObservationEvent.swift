@@ -9,12 +9,12 @@
 import Foundation
 
 public enum ObservationEvent<Value> {
-    case Change(Value)
+    case Next(Value)
     case Error(ErrorType, Value)
 
     public var value: Value {
         switch self {
-        case .Change(let value):
+        case .Next(let value):
             return value
         case .Error(_, let value):
             return value
@@ -23,7 +23,7 @@ public enum ObservationEvent<Value> {
     
     public var error: ErrorType? {
         switch self {
-        case .Change(_):
+        case .Next(_):
             return nil
         case .Error(let error, _):
             return error
@@ -35,7 +35,7 @@ public enum ObservationEvent<Value> {
         case (_, .Some(let error)):
             self = .Error(error, change)
         case _:
-            self = .Change(change)
+            self = .Next(change)
         }
     }
 }
