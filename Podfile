@@ -7,18 +7,11 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 project 'ObservableProperty'
 
-target "ObservableProperty" do
-   project 'ObservableProperty'
-   platform :ios, "9.0"
-   pod 'SwiftSynchronized', :git => 'https://github.com/jedlewison/SwiftSynchronized.git'
-end
-
 target "ObservablePropertyTests" do
    project 'ObservableProperty'
    platform :ios, "9.0"
-   pod 'SwiftSynchronized', :git => 'https://github.com/jedlewison/SwiftSynchronized.git'
    pod 'Quick'
-   pod 'Nimble', :git => 'https://github.com/Quick/Nimble.git'
+   pod 'Nimble'
 end
 
 

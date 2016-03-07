@@ -1,32 +1,15 @@
 PODS:
   - Nimble (3.1.0)
   - Quick (0.9.1)
-  - SwiftSynchronized (1.0.1)
 
 DEPENDENCIES:
-  - Nimble (from `https://github.com/Quick/Nimble.git`)
+  - Nimble
   - Quick
-  - SwiftSynchronized (from `https://github.com/jedlewison/SwiftSynchronized.git`)
-
-EXTERNAL SOURCES:
-  Nimble:
-    :git: https://github.com/Quick/Nimble.git
-  SwiftSynchronized:
-    :git: https://github.com/jedlewison/SwiftSynchronized.git
-
-CHECKOUT OPTIONS:
-  Nimble:
-    :commit: 1730543fcd8b7d7258a3270bb6d3118921d46f9d
-    :git: https://github.com/Quick/Nimble.git
-  SwiftSynchronized:
-    :commit: 1e94d5621e6f4c447ebbba12cfaa3f7765f74ae4
-    :git: https://github.com/jedlewison/SwiftSynchronized.git
 
 SPEC CHECKSUMS:
-  Nimble: eb2a9b164b9a3f16df6581c692a0bfced7d072a4
+  Nimble: 79d40f4d69d47314229bbabacaa02b8838c779b9
   Quick: a5221fc21788b6aeda934805e68b061839bc3165
-  SwiftSynchronized: cfb984a52a3f336715b3297b6f94846204be75f9
 
-PODFILE CHECKSUM: 5c8376648627fc64d44ec7574816af2daa60c00e
+PODFILE CHECKSUM: d012f59cfdb203543999eb80ded8b48c98ffb59b
 
 COCOAPODS: 1.0.0.beta.4

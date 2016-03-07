@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftSynchronized
 
 public final class ObservableProperty<Value> {
 

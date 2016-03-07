@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		46E95897020846D5F6DABB93 /* Pods_ObservableProperty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BE617C1A6D84FD9A3F414FB /* Pods_ObservableProperty.framework */; };
 		48FF5CFA43B66A0CA2BE54F7 /* Pods_ObservablePropertyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8123177CA7DDFBCBDADDCE /* Pods_ObservablePropertyTests.framework */; };
 		854CCB911C836A0000182AD7 /* ObservationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854CCB901C836A0000182AD7 /* ObservationEvent.swift */; };
 		85C523821C7ABDA2009F432F /* ObservableProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 85C523811C7ABDA2009F432F /* ObservableProperty.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -27,7 +26,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3D64631D3C417F5C31331CAF /* Pods-ObservableProperty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ObservableProperty.release.xcconfig"; path = "Pods/Target Support Files/Pods-ObservableProperty/Pods-ObservableProperty.release.xcconfig"; sourceTree = "<group>"; };
 		5BE617C1A6D84FD9A3F414FB /* Pods_ObservableProperty.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ObservableProperty.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71DA27463FEFF044738F8251 /* Pods-ObservablePropertyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ObservablePropertyTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ObservablePropertyTests/Pods-ObservablePropertyTests.release.xcconfig"; sourceTree = "<group>"; };
 		8514F7811C7F5D0400AEED3F /* Podscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Podscript.swift; sourceTree = "<group>"; };
@@ -40,7 +38,6 @@
 		85C5238D1C7ABDA2009F432F /* ObservablePropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservablePropertyTests.swift; sourceTree = "<group>"; };
 		85C5238F1C7ABDA2009F432F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		85D352CB1C7ABED1009148E6 /* ObservableProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableProperty.swift; sourceTree = "<group>"; };
-		A51A9E31C97D4889759477FE /* Pods-ObservableProperty.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ObservableProperty.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ObservableProperty/Pods-ObservableProperty.debug.xcconfig"; sourceTree = "<group>"; };
 		E6492D8069F8B0CF3F105EA0 /* Pods-ObservablePropertyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ObservablePropertyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ObservablePropertyTests/Pods-ObservablePropertyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FA8123177CA7DDFBCBDADDCE /* Pods_ObservablePropertyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ObservablePropertyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -50,7 +47,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				46E95897020846D5F6DABB93 /* Pods_ObservableProperty.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,8 +109,6 @@
 			children = (
 				E6492D8069F8B0CF3F105EA0 /* Pods-ObservablePropertyTests.debug.xcconfig */,
 				71DA27463FEFF044738F8251 /* Pods-ObservablePropertyTests.release.xcconfig */,
-				A51A9E31C97D4889759477FE /* Pods-ObservableProperty.debug.xcconfig */,
-				3D64631D3C417F5C31331CAF /* Pods-ObservableProperty.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -146,12 +140,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 85C523921C7ABDA2009F432F /* Build configuration list for PBXNativeTarget "ObservableProperty" */;
 			buildPhases = (
-				8441A92D89F6406C34DBFEC9 /* Check Pods Manifest.lock */,
 				85C523791C7ABDA2009F432F /* Sources */,
 				85C5237A1C7ABDA2009F432F /* Frameworks */,
 				85C5237B1C7ABDA2009F432F /* Headers */,
 				85C5237C1C7ABDA2009F432F /* Resources */,
-				5DAA5CE70EC0677A7CF707B8 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -267,37 +259,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ObservablePropertyTests/Pods-ObservablePropertyTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5DAA5CE70EC0677A7CF707B8 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ObservableProperty/Pods-ObservableProperty-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		72BE2A9F1A0439FB3373031F /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		8441A92D89F6406C34DBFEC9 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -434,7 +396,6 @@
 		};
 		85C523931C7ABDA2009F432F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A51A9E31C97D4889759477FE /* Pods-ObservableProperty.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
@@ -453,7 +414,6 @@
 		};
 		85C523941C7ABDA2009F432F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3D64631D3C417F5C31331CAF /* Pods-ObservableProperty.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
