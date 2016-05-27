@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = "ObservableProperty"
-    s.version          = "0.1.4"
+    s.version          = "0.1.5"
     s.summary          = "A one-to-many observable property"
     s.description      = <<-DESC
                           A one-to-many observable property for Swift, including error propagation.

@@ -44,11 +44,13 @@ public final class ObservableProperty<Value> {
         }
     }
 
-    public func addObserver(observer: AnyObject, closure: ObservationClosure) {
+    public func addObserver(observer: AnyObject, includeInitialValue: Bool = true, closure: ObservationClosure) {
         _observationQueue.performOnQueue {
             let boxedObserver = WeakObserverBox(boxedObserver: observer, closure: closure)
             self.observers.append(boxedObserver)
-            boxedObserver.notify( self.observationEventInstance() )
+            if includeInitialValue {
+                boxedObserver.notify( self.observationEventInstance() )
+            }
         }
     }
 

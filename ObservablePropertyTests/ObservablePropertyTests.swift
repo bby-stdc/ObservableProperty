@@ -33,97 +33,203 @@ class ObservablePropertySpec: QuickSpec {
         beforeEach {
             subject = TestClass()
             subject.text.setValue("First Value")
-            subject.text.addObserver(self) {
+        }
 
-                switch $0.event {
-                case .Error(let error, let value):
-                    observedError = error
-                    observedValue = value
-                case .Next(let value):
-                    observedError = nil
-                    observedValue = value
+        context("observing with initial value included") {
+
+            beforeEach {
+
+                subject.text.addObserver(self) {
+
+                    switch $0.event {
+                    case .Error(let error, let value):
+                        observedError = error
+                        observedValue = value
+                    case .Next(let value):
+                        observedError = nil
+                        observedValue = value
+                    }
+
                 }
 
             }
 
-        }
+            describe("immediately after observation") {
 
-        context("immediately after observation") {
-
-            it("should not have an error") {
-                expect(observedError).to(beNil())
-            }
-
-            it("Should have the initial value") {
-                expect(observedValue).to(equal("First Value"))
-            }
-
-        }
-
-        context("after a change") {
-
-            beforeEach {
-                subject.text.setValue("Second Value")
-            }
-
-            it("still should not have an error") {
-                expect(observedError).to(beNil())
-            }
-
-            it("Should eventualy get the second value") {
-                expect(observedValue).to(equal("Second Value"))
-            }
-
-        }
-
-        context("when reporting an error") {
-
-            beforeEach {
-                subject.text.setError(TestError.SimpleError)
-            }
-
-            it("should have the error") {
-                expect(observedError).toNot(beNil())
-            }
-
-            it("should still have the first value") {
-                expect(observedValue).to(equal("First Value"))
-            }
-
-            context("The next time a value is set") {
-
-                beforeEach {
-                    subject.text.setValue("Error-clearing value")
-                }
-
-                it("should automatically clear the error") {
+                it("should not have an error") {
                     expect(observedError).to(beNil())
                 }
 
-                it("the new value should equal the error-clearing value") {
-                    expect(observedValue).to(equal("Error-clearing value"))
+                it("Should have the initial value") {
+                    expect(observedValue).to(equal("First Value"))
                 }
 
             }
 
-            context("The next time a value is set with another error") {
+            context("after a change") {
 
                 beforeEach {
-                    subject.text.setValue("Value with error", error: TestError.SimpleError)
+                    subject.text.setValue("Second Value")
                 }
 
-                it("should still have an error") {
+                it("still should not have an error") {
+                    expect(observedError).to(beNil())
+                }
+
+                it("Should eventualy get the second value") {
+                    expect(observedValue).to(equal("Second Value"))
+                }
+
+            }
+
+            context("when reporting an error") {
+
+                beforeEach {
+                    subject.text.setError(TestError.SimpleError)
+                }
+
+                it("should have the error") {
                     expect(observedError).toNot(beNil())
                 }
 
-                it("the new value should be the value with an error") {
-                    expect(observedValue).to(equal("Value with error"))
+                it("should still have the first value") {
+                    expect(observedValue).to(equal("First Value"))
                 }
-                
+
+                context("The next time a value is set") {
+
+                    beforeEach {
+                        subject.text.setValue("Error-clearing value")
+                    }
+
+                    it("should automatically clear the error") {
+                        expect(observedError).to(beNil())
+                    }
+
+                    it("the new value should equal the error-clearing value") {
+                        expect(observedValue).to(equal("Error-clearing value"))
+                    }
+
+                }
+
+                context("The next time a value is set with another error") {
+
+                    beforeEach {
+                        subject.text.setValue("Value with error", error: TestError.SimpleError)
+                    }
+
+                    it("should still have an error") {
+                        expect(observedError).toNot(beNil())
+                    }
+
+                    it("the new value should be the value with an error") {
+                        expect(observedValue).to(equal("Value with error"))
+                    }
+
+                }
+
             }
 
         }
 
+        context("observing while ignoring initial value") {
+
+            beforeEach {
+
+                subject.text.addObserver(self, includeInitialValue: false) {
+
+                    switch $0.event {
+                    case .Error(let error, let value):
+                        observedError = error
+                        observedValue = value
+                    case .Next(let value):
+                        observedError = nil
+                        observedValue = value
+                    }
+
+                }
+
+            }
+
+            describe("immediately after observation") {
+
+                it("should not have an error") {
+                    expect(observedError).to(beNil())
+                }
+
+                it("Should have the initial value") {
+                    expect(observedValue).to(beNil())
+                }
+
+            }
+
+            context("after a change") {
+
+                beforeEach {
+                    subject.text.setValue("Second Value")
+                }
+
+                it("still should not have an error") {
+                    expect(observedError).to(beNil())
+                }
+
+                it("Should eventualy get the second value") {
+                    expect(observedValue).to(equal("Second Value"))
+                }
+
+            }
+
+            context("when reporting an error") {
+
+                beforeEach {
+                    subject.text.setError(TestError.SimpleError)
+                }
+
+                it("should have the error") {
+                    expect(observedError).toNot(beNil())
+                }
+
+                it("should still have the first value") {
+                    expect(observedValue).to(equal("First Value"))
+                }
+
+                context("The next time a value is set") {
+
+                    beforeEach {
+                        subject.text.setValue("Error-clearing value")
+                    }
+
+                    it("should automatically clear the error") {
+                        expect(observedError).to(beNil())
+                    }
+
+                    it("the new value should equal the error-clearing value") {
+                        expect(observedValue).to(equal("Error-clearing value"))
+                    }
+                    
+                }
+                
+                context("The next time a value is set with another error") {
+                    
+                    beforeEach {
+                        subject.text.setValue("Value with error", error: TestError.SimpleError)
+                    }
+                    
+                    it("should still have an error") {
+                        expect(observedError).toNot(beNil())
+                    }
+                    
+                    it("the new value should be the value with an error") {
+                        expect(observedValue).to(equal("Value with error"))
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        
         afterEach {
             subject = nil
             observedError = nil
