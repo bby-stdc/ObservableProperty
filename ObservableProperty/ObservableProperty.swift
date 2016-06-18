@@ -11,7 +11,7 @@ public final class ObservableProperty<Value> {
 
     public typealias ObservationClosure = (Observation<Value>) -> ()
 
-    public init(value: Value, error: ErrorType? = nil, observationQueue: NSOperationQueue = .mainQueue(), assertSafeAcess: Bool = false) {
+    public init(value: Value, error: ErrorProtocol? = nil, observationQueue: OperationQueue = .main(), assertSafeAcess: Bool = false) {
         _value = value
         _assertSafeAccess = assertSafeAcess
         _error = error
@@ -20,11 +20,12 @@ public final class ObservableProperty<Value> {
 
     private let _assertSafeAccess: Bool
 
-    public func setError(newErrorValue: ErrorType?) {
+    public func set(error: ErrorProtocol?) {
         _observationQueue.performOnQueue {
-            guard newErrorValue != nil || self.error != nil else { return }
-            self.error = newErrorValue
-            self.notifyAll( ObservationEvent(change: self.value, error: newErrorValue) )
+            // Make sure we're either setting or clearing an error
+            guard error != nil || self.error != nil else { return }
+            self.error = error
+            self.notifyAll( .next(error, self.value) )
         }
     }
 
@@ -33,62 +34,58 @@ public final class ObservableProperty<Value> {
         set { _value = newValue }
     }
 
-    public private(set) var error: ErrorType? {
+    public private(set) var error: ErrorProtocol? {
         get { return _performWithQueueWarning(_error) }
         set { _error = newValue }
     }
 
-    public func removeObserver(observer: AnyObject) {
+    public func remove(_ observer: AnyObject) {
         _observationQueue.performOnQueue {
             self.observers = self.observers.filter { $0.boxedObserver !== observer }
         }
     }
 
-    public func addObserver(observer: AnyObject, includeInitialValue: Bool = true, closure: ObservationClosure) {
+    public func add(_ observer: AnyObject, observeCurrentValue: Bool = true, closure: ObservationClosure) {
         _observationQueue.performOnQueue {
             let boxedObserver = WeakObserverBox(boxedObserver: observer, closure: closure)
             self.observers.append(boxedObserver)
-            if includeInitialValue {
-                boxedObserver.notify( self.observationEventInstance() )
+            if observeCurrentValue {
+                boxedObserver.notify( .initial(self.error, self.value) )
             }
         }
     }
 
-    private func _performWithQueueWarning<ReturnType>(@autoclosure getter: () -> ReturnType) -> ReturnType {
+    private func _performWithQueueWarning<ReturnType>( _ getter: @autoclosure () -> ReturnType) -> ReturnType {
         if _assertSafeAccess {
-            assert(_observationQueue == NSOperationQueue.currentQueue(), "WARNING: \(self) accessed from \(NSOperationQueue.currentQueue()) instead of observationQueue: \(_observationQueue)")
+            assert(_observationQueue == OperationQueue.current(), "WARNING: \(self) accessed from \(OperationQueue.current()) instead of observationQueue: \(_observationQueue)")
         }
         return getter()
     }
 
     private var _value: Value
-    private var _error: ErrorType?
+    private var _error: ErrorProtocol?
 
     private var observers: [WeakObserverBox<Value>] = []
-    private let _observationQueue: NSOperationQueue
-
-    private func observationEventInstance() -> ObservationEvent<Value> {
-        return ObservationEvent(change: value, error: error)
-    }
+    private let _observationQueue: OperationQueue
 
 }
 
 extension ObservableProperty {
 
-    public func setValue(newValue: Value, error newErrorValue: ErrorType?) {
+    public func set(value newValue: Value, error newErrorValue: ErrorProtocol?) {
         _observationQueue.performOnQueue { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.value = newValue
             strongSelf.error = newErrorValue
-            strongSelf.notifyAll( strongSelf.observationEventInstance() )
+            strongSelf.notifyAll( .next(newErrorValue, newValue) )
         }
     }
 
-    public func setValue(newValue: Value) {
-        setValue(newValue, error: nil)
+    public func set(value newValue: Value) {
+        set(value: newValue, error: nil)
     }
 
-    private func notifyAll(observationInstance: ObservationEvent<Value>) {
+    private func notifyAll(_ observationInstance: ObservationEvent<Value>) {
         observers.forEach { $0.notify(observationInstance) }
         observers = observers.filter { $0.boxedObserver != nil }
     }
@@ -97,20 +94,20 @@ extension ObservableProperty {
 
 extension ObservableProperty where Value: Equatable {
 
-    public func setValue(newValue: Value, error newErrorValue: ErrorType?) {
+    public func set(value newValue: Value, error newErrorValue: ErrorProtocol?) {
         _observationQueue.performOnQueue { [weak self] in
             guard self?.value != newValue || newErrorValue != nil || self?.error != nil else { return }
             self?.value = newValue
             self?.error = newErrorValue
-            self?.notifyAll( ObservationEvent(change: newValue, error: newErrorValue) )
+            self?.notifyAll( .next(newErrorValue, newValue) )
         }
     }
 
-    public func setValue(newValue: Value) {
-        setValue(newValue, error: nil)
+    public func set(value newValue: Value) {
+        set(value: newValue, error: nil)
     }
 
-    private func notifyAll(observationInstance: ObservationEvent<Value>) {
+    private func notifyAll(_ observationInstance: ObservationEvent<Value>) {
         observers.forEach {
             guard value == observationInstance.value else { return }
             $0.notify(observationInstance)
@@ -131,20 +128,21 @@ final internal class WeakObserverBox<Value> {
     }
     weak var boxedObserver: AnyObject?
     let closure: ObservationClosure
-    func notify(instance: ObservationEvent<Value>) {
+
+    func notify(_ instance: ObservationEvent<Value>) {
         guard let _ = boxedObserver else { return }
         closure( Observation(event: instance, observerBox: self) )
     }
 
 }
 
-private extension NSOperationQueue {
+private extension OperationQueue {
 
-    func performOnQueue(action: () -> ()) {
-        if self == NSOperationQueue.currentQueue() {
+    func performOnQueue(_ action: () -> ()) {
+        if self == OperationQueue.current() {
             action()
         } else {
-            addOperationWithBlock(action)
+            addOperation(action)
         }
     }
 }

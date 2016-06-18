@@ -187,6 +187,7 @@
 				TargetAttributes = {
 					85C5237D1C7ABDA2009F432F = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 0800;
 					};
 					85C523871C7ABDA2009F432F = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -409,6 +410,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -426,6 +428,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.magicappfactory.ObservableProperty;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
