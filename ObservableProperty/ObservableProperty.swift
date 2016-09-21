@@ -11,16 +11,16 @@ public final class ObservableProperty<Value> {
 
     public typealias ObservationClosure = (Observation<Value>) -> ()
 
-    public init(value: Value, error: ErrorProtocol? = nil, observationQueue: OperationQueue = .main(), assertSafeAcess: Bool = false) {
+    public init(value: Value, error: Error? = nil, observationQueue: OperationQueue = .main, assertSafeAcess: Bool = false) {
         _value = value
         _assertSafeAccess = assertSafeAcess
         _error = error
         _observationQueue = observationQueue
     }
 
-    private let _assertSafeAccess: Bool
+    fileprivate let _assertSafeAccess: Bool
 
-    public func set(error: ErrorProtocol?) {
+    public func set(_ error: Error?) {
         _observationQueue.performOnQueue {
             // Make sure we're either setting or clearing an error
             guard error != nil || self.error != nil else { return }
@@ -29,12 +29,12 @@ public final class ObservableProperty<Value> {
         }
     }
 
-    public private(set) var value: Value {
+    public fileprivate(set) var value: Value {
         get { return _performWithQueueWarning(_value) }
         set { _value = newValue }
     }
 
-    public private(set) var error: ErrorProtocol? {
+    public fileprivate(set) var error: Error? {
         get { return _performWithQueueWarning(_error) }
         set { _error = newValue }
     }
@@ -45,7 +45,7 @@ public final class ObservableProperty<Value> {
         }
     }
 
-    public func add(_ observer: AnyObject, observeCurrentValue: Bool = true, closure: ObservationClosure) {
+    public func add(_ observer: AnyObject, observeCurrentValue: Bool = true, closure: @escaping ObservationClosure) {
         _observationQueue.performOnQueue {
             let boxedObserver = WeakObserverBox(boxedObserver: observer, closure: closure)
             self.observers.append(boxedObserver)
@@ -55,24 +55,24 @@ public final class ObservableProperty<Value> {
         }
     }
 
-    private func _performWithQueueWarning<ReturnType>( _ getter: @autoclosure () -> ReturnType) -> ReturnType {
+    fileprivate func _performWithQueueWarning<ReturnType>( _ getter: @autoclosure () -> ReturnType) -> ReturnType {
         if _assertSafeAccess {
-            assert(_observationQueue == OperationQueue.current(), "WARNING: \(self) accessed from \(OperationQueue.current()) instead of observationQueue: \(_observationQueue)")
+            assert(_observationQueue == OperationQueue.current, "WARNING: \(self) accessed from \(OperationQueue.current) instead of observationQueue: \(_observationQueue)")
         }
         return getter()
     }
 
-    private var _value: Value
-    private var _error: ErrorProtocol?
+    fileprivate var _value: Value
+    fileprivate var _error: Error?
 
-    private var observers: [WeakObserverBox<Value>] = []
-    private let _observationQueue: OperationQueue
+    fileprivate var observers: [WeakObserverBox<Value>] = []
+    fileprivate let _observationQueue: OperationQueue
 
 }
 
 extension ObservableProperty {
 
-    public func set(value newValue: Value, error newErrorValue: ErrorProtocol?) {
+    public func set(value newValue: Value, error newErrorValue: Error?) {
         _observationQueue.performOnQueue { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.value = newValue
@@ -85,7 +85,7 @@ extension ObservableProperty {
         set(value: newValue, error: nil)
     }
 
-    private func notifyAll(_ observationInstance: ObservationEvent<Value>) {
+    fileprivate func notifyAll(_ observationInstance: ObservationEvent<Value>) {
         observers.forEach { $0.notify(observationInstance) }
         observers = observers.filter { $0.boxedObserver != nil }
     }
@@ -94,7 +94,7 @@ extension ObservableProperty {
 
 extension ObservableProperty where Value: Equatable {
 
-    public func set(value newValue: Value, error newErrorValue: ErrorProtocol?) {
+    public func set(value newValue: Value, error newErrorValue: Error?) {
         _observationQueue.performOnQueue { [weak self] in
             guard self?.value != newValue || newErrorValue != nil || self?.error != nil else { return }
             self?.value = newValue
@@ -107,12 +107,12 @@ extension ObservableProperty where Value: Equatable {
         set(value: newValue, error: nil)
     }
 
-    private func notifyAll(_ observationInstance: ObservationEvent<Value>) {
+    fileprivate func notifyAll(_ observationInstance: ObservationEvent<Value>) {
+        guard value == observationInstance.value else { return }
+        observers = observers.filter { $0.boxedObserver != nil }
         observers.forEach {
-            guard value == observationInstance.value else { return }
             $0.notify(observationInstance)
         }
-        observers = observers.filter { $0.boxedObserver != nil }
     }
 
 
@@ -122,7 +122,7 @@ final internal class WeakObserverBox<Value> {
 
     typealias ObservationClosure = (Observation<Value>) -> ()
 
-    init(boxedObserver: AnyObject?, closure: ObservationClosure) {
+    init(boxedObserver: AnyObject?, closure: @escaping ObservationClosure) {
         self.boxedObserver = boxedObserver
         self.closure = closure
     }
@@ -138,8 +138,8 @@ final internal class WeakObserverBox<Value> {
 
 private extension OperationQueue {
 
-    func performOnQueue(_ action: () -> ()) {
-        if self == OperationQueue.current() {
+    func performOnQueue(_ action: @escaping () -> ()) {
+        if self == OperationQueue.current {
             action()
         } else {
             addOperation(action)

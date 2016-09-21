@@ -9,8 +9,8 @@
 import Quick
 import Nimble
 
-enum TestError: ErrorType {
-    case SimpleError
+enum TestError: Error {
+    case simpleError
 }
 
 @testable import ObservableProperty
@@ -28,25 +28,25 @@ class ObservablePropertySpec: QuickSpec {
 
         var subject: TestClass!
         var observedValue: String?
-        var observedError: ErrorType?
+        var observedError: Error?
 
         beforeEach {
             subject = TestClass()
-            subject.text.setValue("First Value")
+            subject.text.set(value: "First Value")
         }
 
         context("observing with initial value included") {
 
             beforeEach {
 
-                subject.text.addObserver(self) {
+                subject.text.add(self) {
 
                     switch $0.event {
-                    case .Error(let error, let value):
+                    case .initial(let error, let value):
                         observedError = error
                         observedValue = value
-                    case .Next(let value):
-                        observedError = nil
+                    case .next(let error, let value):
+                        observedError = error
                         observedValue = value
                     }
 
@@ -69,7 +69,7 @@ class ObservablePropertySpec: QuickSpec {
             context("after a change") {
 
                 beforeEach {
-                    subject.text.setValue("Second Value")
+                    subject.text.set(value: "Second Value")
                 }
 
                 it("still should not have an error") {
@@ -85,7 +85,7 @@ class ObservablePropertySpec: QuickSpec {
             context("when reporting an error") {
 
                 beforeEach {
-                    subject.text.setError(TestError.SimpleError)
+                    subject.text.set(TestError.simpleError)
                 }
 
                 it("should have the error") {
@@ -99,7 +99,7 @@ class ObservablePropertySpec: QuickSpec {
                 context("The next time a value is set") {
 
                     beforeEach {
-                        subject.text.setValue("Error-clearing value")
+                        subject.text.set(value: "Error-clearing value")
                     }
 
                     it("should automatically clear the error") {
@@ -115,7 +115,7 @@ class ObservablePropertySpec: QuickSpec {
                 context("The next time a value is set with another error") {
 
                     beforeEach {
-                        subject.text.setValue("Value with error", error: TestError.SimpleError)
+                        subject.text.set(value: "Value with error", error: TestError.simpleError)
                     }
 
                     it("should still have an error") {
@@ -136,14 +136,14 @@ class ObservablePropertySpec: QuickSpec {
 
             beforeEach {
 
-                subject.text.addObserver(self, includeInitialValue: false) {
+                subject.text.add(self, observeCurrentValue: false) {
 
                     switch $0.event {
-                    case .Error(let error, let value):
+                    case .initial(let error, let value):
                         observedError = error
                         observedValue = value
-                    case .Next(let value):
-                        observedError = nil
+                    case .next(let error, let value):
+                        observedError = error
                         observedValue = value
                     }
 
@@ -166,7 +166,7 @@ class ObservablePropertySpec: QuickSpec {
             context("after a change") {
 
                 beforeEach {
-                    subject.text.setValue("Second Value")
+                    subject.text.set(value: "Second Value")
                 }
 
                 it("still should not have an error") {
@@ -182,7 +182,7 @@ class ObservablePropertySpec: QuickSpec {
             context("when reporting an error") {
 
                 beforeEach {
-                    subject.text.setError(TestError.SimpleError)
+                    subject.text.set(TestError.simpleError)
                 }
 
                 it("should have the error") {
@@ -196,7 +196,7 @@ class ObservablePropertySpec: QuickSpec {
                 context("The next time a value is set") {
 
                     beforeEach {
-                        subject.text.setValue("Error-clearing value")
+                        subject.text.set(value: "Error-clearing value")
                     }
 
                     it("should automatically clear the error") {
@@ -212,7 +212,7 @@ class ObservablePropertySpec: QuickSpec {
                 context("The next time a value is set with another error") {
                     
                     beforeEach {
-                        subject.text.setValue("Value with error", error: TestError.SimpleError)
+                        subject.text.set(value: "Value with error", error: TestError.simpleError)
                     }
                     
                     it("should still have an error") {
