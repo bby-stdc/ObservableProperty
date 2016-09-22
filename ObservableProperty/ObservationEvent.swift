@@ -23,7 +23,7 @@ final public class Observation<Value> {
         return event.value
     }
 
-    public var error: ErrorType? {
+    public var error: Error? {
         return event.error
     }
 
@@ -34,33 +34,25 @@ final public class Observation<Value> {
 }
 
 public enum ObservationEvent<Value> {
-    case Next(Value)
-    case Error(ErrorType, Value)
+    case initial(Error?, Value)
+    case next(Error?, Value)
 
     public var value: Value {
         switch self {
-        case .Next(let value):
+        case .next(_, let value):
             return value
-        case .Error(_, let value):
+        case .initial(_, let value):
             return value
         }
     }
     
-    public var error: ErrorType? {
+    public var error: Error? {
         switch self {
-        case .Next(_):
-            return nil
-        case .Error(let error, _):
+        case .next(let error, _):
+            return error
+        case .initial(let error, _):
             return error
         }
     }
 
-    public init(change: Value, error: ErrorType?) {
-        switch (change, error) {
-        case (_, .Some(let error)):
-            self = .Error(error, change)
-        case _:
-            self = .Next(change)
-        }
-    }
 }
