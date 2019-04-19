@@ -57,7 +57,7 @@ public final class ObservableProperty<Value> {
 
     fileprivate func _performWithQueueWarning<ReturnType>( _ getter: @autoclosure () -> ReturnType) -> ReturnType {
         if _assertSafeAccess {
-            assert(_observationQueue == OperationQueue.current, "WARNING: \(self) accessed from \(OperationQueue.current) instead of observationQueue: \(_observationQueue)")
+            assert(_observationQueue == OperationQueue.current, "WARNING: \(self) accessed from \(String(describing: OperationQueue.current)) instead of observationQueue: \(_observationQueue)")
         }
         return getter()
     }
